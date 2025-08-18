@@ -150,6 +150,11 @@ export type TargetRepository = {
   repo: string;
   branch?: string;
   baseCommit?: string;
+  provider?: {
+    type: "github" | "gitea" | "forgejo";
+    baseUrl?: string;
+    apiToken?: string;
+  };
 };
 
 export type CustomRules = {
@@ -449,6 +454,37 @@ export const GraphConfigurationMetadata: {
         "JSON configuration for custom MCP servers. LangGraph docs server is set by default. See the `mcpServers` field of the LangChain MCP Adapters `ClientConfig` type for information on this schema. [Documentation here](https://v03.api.js.langchain.com/types/_langchain_mcp_adapters.ClientConfig.html).",
     },
   },
+  gitProviderType: {
+    x_open_swe_ui_config: {
+      type: "select",
+      default: "github",
+      description:
+        "Git hosting provider type. Use 'github' for GitHub.com, 'gitea' for Gitea instances, or 'forgejo' for Forgejo instances.",
+      options: [
+        { label: "GitHub", value: "github" },
+        { label: "Gitea", value: "gitea" },
+        { label: "Forgejo", value: "forgejo" },
+      ],
+    },
+  },
+  gitProviderBaseUrl: {
+    x_open_swe_ui_config: {
+      type: "text",
+      default: "",
+      description:
+        "Base URL for self-hosted Git provider (e.g., https://git.example.com). Leave empty for GitHub.com.",
+      placeholder: "https://git.example.com",
+    },
+  },
+  gitProviderToken: {
+    x_open_swe_ui_config: {
+      type: "text", 
+      default: "",
+      description:
+        "API token for self-hosted Git provider. Not needed for GitHub (uses OAuth).",
+      placeholder: "Your Git provider API token",
+    },
+  },
   apiKeys: {
     x_open_swe_ui_config: {
       type: "hidden",
@@ -670,6 +706,24 @@ export const GraphConfiguration = z.object({
    */
   mcpServers: withLangGraph(z.string().optional(), {
     metadata: GraphConfigurationMetadata.mcpServers,
+  }),
+  /**
+   * Git hosting provider type (github, gitea, forgejo)
+   */
+  gitProviderType: withLangGraph(z.string().optional(), {
+    metadata: GraphConfigurationMetadata.gitProviderType,
+  }),
+  /**
+   * Base URL for self-hosted Git provider
+   */
+  gitProviderBaseUrl: withLangGraph(z.string().optional(), {
+    metadata: GraphConfigurationMetadata.gitProviderBaseUrl,
+  }),
+  /**
+   * API token for self-hosted Git provider
+   */
+  gitProviderToken: withLangGraph(z.string().optional(), {
+    metadata: GraphConfigurationMetadata.gitProviderToken,
   }),
   /**
    * The maxium number of times the reviewer subgraph can be executed.

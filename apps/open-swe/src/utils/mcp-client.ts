@@ -8,6 +8,7 @@ import {
 } from "@open-swe/shared/open-swe/mcp";
 import { createLogger, LogLevel } from "./logger.js";
 import { DEFAULT_MCP_SERVERS } from "@open-swe/shared/constants";
+import { createGitProviderMcpServer, getGitProviderMcpServerName } from "@open-swe/shared/git-provider-mcp";
 
 const logger = createLogger(LogLevel.INFO, "MCP Client");
 
@@ -88,6 +89,29 @@ export async function getMcpTools(
   try {
     // TODO: Remove default MCP servers obj once UI is implemented
     const mergedServers: McpServers = { ...DEFAULT_MCP_SERVERS };
+
+    // Add Git provider MCP servers based on configuration
+    const gitProviderType = config?.configurable?.["gitProviderType"] as string;
+    const gitProviderBaseUrl = config?.configurable?.["gitProviderBaseUrl"] as string;
+    const gitProviderToken = config?.configurable?.["gitProviderToken"] as string;
+
+    if (gitProviderType && gitProviderType !== "github" && gitProviderBaseUrl && gitProviderToken) {
+      try {
+        const providerConfig = {
+          type: gitProviderType as "gitea" | "forgejo",
+          baseUrl: gitProviderBaseUrl,
+          apiToken: gitProviderToken,
+        };
+        const mcpServerConfig = createGitProviderMcpServer(providerConfig);
+        if (mcpServerConfig) {
+          const serverName = getGitProviderMcpServerName(gitProviderType as "gitea" | "forgejo");
+          mergedServers[serverName] = mcpServerConfig;
+          logger.info(`Added ${gitProviderType} MCP server: ${serverName}`);
+        }
+      } catch (error) {
+        logger.warn(`Failed to create MCP server for ${gitProviderType}: ${error}`);
+      }
+    }
 
     const mcpServersConfig = config?.configurable?.["mcpServers"];
     if (mcpServersConfig) {
