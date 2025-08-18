@@ -40,6 +40,39 @@ export const DEFAULT_MCP_SERVERS = {
   },
 };
 
+// Templates for self-hosted Git provider MCP servers
+export const GITEA_MCP_SERVER_TEMPLATE = {
+  command: "npx",
+  args: [
+    "gitea-mcp-server",
+    "--base-url", 
+    "${GITEA_BASE_URL}",
+    "--token",
+    "${GITEA_TOKEN}",
+  ],
+  stderr: "inherit" as const,
+  env: {
+    GITEA_BASE_URL: "${GITEA_BASE_URL}",
+    GITEA_TOKEN: "${GITEA_TOKEN}",
+  },
+};
+
+export const FORGEJO_MCP_SERVER_TEMPLATE = {
+  command: "npx", 
+  args: [
+    "forgejo-mcp-server",
+    "--base-url",
+    "${FORGEJO_BASE_URL}",
+    "--token", 
+    "${FORGEJO_TOKEN}",
+  ],
+  stderr: "inherit" as const,
+  env: {
+    FORGEJO_BASE_URL: "${FORGEJO_BASE_URL}", 
+    FORGEJO_TOKEN: "${FORGEJO_TOKEN}",
+  },
+};
+
 export const API_KEY_REQUIRED_MESSAGE =
   "Unknown users must provide API keys to use the Open SWE demo application";
 
