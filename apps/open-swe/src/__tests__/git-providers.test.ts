@@ -22,10 +22,12 @@ describe("Git Provider Support", () => {
       });
 
       expect(config).toBeDefined();
-      expect(config?.command).toBe("npx");
-      expect(config?.args).toContain("gitea-mcp-server");
-      expect(config?.args).toContain("https://git.example.com");
-      expect(config?.args).toContain("test-token");
+      if (config && "command" in config) {
+        expect(config.command).toBe("npx");
+        expect(config.args).toContain("gitea-mcp-server");
+        expect(config.args).toContain("https://git.example.com");
+        expect(config.args).toContain("test-token");
+      }
     });
 
     it("should create Forgejo MCP server configuration", () => {
@@ -36,10 +38,12 @@ describe("Git Provider Support", () => {
       });
 
       expect(config).toBeDefined();
-      expect(config?.command).toBe("npx");
-      expect(config?.args).toContain("forgejo-mcp-server");
-      expect(config?.args).toContain("https://forge.example.com");
-      expect(config?.args).toContain("forge-token");
+      if (config && "command" in config) {
+        expect(config.command).toBe("npx");
+        expect(config.args).toContain("forgejo-mcp-server");
+        expect(config.args).toContain("https://forge.example.com");
+        expect(config.args).toContain("forge-token");
+      }
     });
 
     it("should return null for GitHub provider", () => {
