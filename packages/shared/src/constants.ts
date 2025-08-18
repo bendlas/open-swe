@@ -42,9 +42,8 @@ export const DEFAULT_MCP_SERVERS = {
 
 // Templates for self-hosted Git provider MCP servers
 export const GITEA_MCP_SERVER_TEMPLATE = {
-  command: "npx",
+  command: "gitea-mcp-server",
   args: [
-    "gitea-mcp-server",
     "--base-url", 
     "${GITEA_BASE_URL}",
     "--token",
@@ -58,9 +57,8 @@ export const GITEA_MCP_SERVER_TEMPLATE = {
 };
 
 export const FORGEJO_MCP_SERVER_TEMPLATE = {
-  command: "npx", 
+  command: "gitea-mcp-server", // Forgejo uses the same server as it's API-compatible
   args: [
-    "forgejo-mcp-server",
     "--base-url",
     "${FORGEJO_BASE_URL}",
     "--token", 

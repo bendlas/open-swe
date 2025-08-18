@@ -2,6 +2,18 @@
 
 This document provides instructions for setting up MCP servers for Gitea and Forgejo self-hosted Git providers.
 
+## Prerequisites
+
+1. **Install the Gitea MCP Server:**
+   The official Gitea MCP server is available and should be installed on your system PATH:
+   ```bash
+   # Install the gitea-mcp-server (refer to https://gitea.com/gitea/gitea-mcp for installation instructions)
+   # Ensure the binary is available on your PATH
+   ```
+
+2. **Note for Forgejo Users:**
+   Forgejo can use the same `gitea-mcp-server` binary since Forgejo is a fork of Gitea with API compatibility.
+
 ## Quick Setup
 
 1. **Configure Git Provider in Open SWE UI:**
@@ -10,7 +22,7 @@ This document provides instructions for setting up MCP servers for Gitea and For
    - Set "Git Provider Base URL" to your instance URL (e.g., `https://git.example.com`)
    - Set "Git Provider Token" to your API token
 
-2. **Open SWE will automatically configure the MCP server** based on your settings.
+2. **Open SWE will automatically configure the MCP server** based on your settings, using the `gitea-mcp-server` binary from your PATH.
 
 ## Manual MCP Server Configuration
 
@@ -32,9 +44,8 @@ If you prefer to configure the MCP server manually via the "MCP Servers" JSON co
     "stderr": "inherit"
   },
   "gitea-mcp": {
-    "command": "npx",
+    "command": "gitea-mcp-server",
     "args": [
-      "gitea-mcp-server",
       "--base-url",
       "https://git.example.com",
       "--token",
@@ -49,15 +60,13 @@ If you prefer to configure the MCP server manually via the "MCP Servers" JSON co
 }
 ```
 
-## Example Gitea MCP Server Implementation
+## Gitea MCP Server Installation
 
-Since MCP servers for Gitea/Forgejo may not exist yet, here's an example implementation structure:
+The official Gitea MCP server is available at: https://gitea.com/gitea/gitea-mcp
 
 ### Installation
 
-```bash
-npm install -g gitea-mcp-server  # hypothetical package
-```
+Follow the installation instructions from the official repository. The binary should be installed to your system PATH.
 
 ### Basic Usage
 
@@ -65,7 +74,11 @@ npm install -g gitea-mcp-server  # hypothetical package
 gitea-mcp-server --base-url https://git.example.com --token your-token
 ```
 
-### Features that should be supported:
+### Forgejo Compatibility
+
+Forgejo users can use the same `gitea-mcp-server` binary since Forgejo is a fork of Gitea with API compatibility.
+
+### Features supported:
 
 - Repository browsing and file reading
 - Issue creation and management
@@ -115,6 +128,7 @@ If you need to create a custom MCP server for your Git provider:
 
 ## Notes
 
-- This implementation assumes hypothetical `gitea-mcp-server` and `forgejo-mcp-server` packages
-- The actual implementation of these servers would need to be created or found
+- The official `gitea-mcp-server` is available at https://gitea.com/gitea/gitea-mcp
+- Forgejo can use the same `gitea-mcp-server` since it's API-compatible
+- The MCP server binary should be installed on your system PATH
 - The configuration structure follows MCP standards and LangChain MCP Adapters format
